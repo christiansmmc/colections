@@ -17,7 +17,7 @@ const FavoritePokemon = () => {
     localStorage.setItem("favoritesP", JSON.stringify(local));
     setLocal(JSON.parse(localStorage.getItem("favoritesP")));
   };
-
+  console.log(local);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -26,16 +26,22 @@ const FavoritePokemon = () => {
       transition={{ duration: 0.25 }}
     >
       <div className="list">
-        {local.map((favorite) => (
-          <div className="fav-card">
-            <Character
-              id={favorite.id}
-              name={favorite.name}
-              image={favorite.image}
-            />
-            <Button onClick={() => remove(favorite.id)}>Remove</Button>
-          </div>
-        ))}
+        {local.length === 0 ? (
+          <h1 style={{ color: "red", fontWeight: "bold" }}>
+            Add at least one character to see your favorites
+          </h1>
+        ) : (
+          local.map((favorite) => (
+            <div className="fav-card">
+              <Character
+                id={favorite.id}
+                name={favorite.name}
+                image={favorite.image}
+              />
+              <Button onClick={() => remove(favorite.id)}>Remove</Button>
+            </div>
+          ))
+        )}
       </div>
     </motion.div>
   );

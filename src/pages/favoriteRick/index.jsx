@@ -34,16 +34,22 @@ const FavoriteRick = () => {
       transition={{ duration: 0.25 }}
     >
       <div className="list">
-        {local.map((favorite) => (
-          <div className="fav-card">
-            <Character
-              id={favorite.id}
-              name={favorite.name}
-              image={favorite.image}
-            />
-            <Button onClick={() => remove(favorite.name)}>Remove</Button>
-          </div>
-        ))}
+        {local.length === 0 ? (
+          <h1 style={{ color: "red", fontWeight: "bold" }}>
+            Add at least one character to see your favorites
+          </h1>
+        ) : (
+          local.map((favorite) => (
+            <div className="fav-card">
+              <Character
+                id={favorite.id}
+                name={favorite.name}
+                image={favorite.image}
+              />
+              <Button onClick={() => remove(favorite.name)}>Remove</Button>
+            </div>
+          ))
+        )}
       </div>
     </motion.div>
   );
