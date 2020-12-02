@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { Button } from "antd";
 import Search from "../../components/searchBar";
 
+import { addFavThunk } from "../../store/favR/thunks";
+
 const Rick = () => {
   const [api, setApi] = useState();
   const [character, setCharacter] = useState([]);
@@ -72,18 +74,25 @@ const Rick = () => {
       </div>
       <div className="list">
         {search.length === 0
-          ? character.map((character) => (
+          ? character.map((character, index) => (
               <Character
-                name={character.name}
-                image={character.image}
-                location={character.location}
+                key={index}
+                onName={addFavThunk}
+                char={{
+                  name: character.name,
+                  image: character.image,
+                  location: character.location,
+                }}
               />
             ))
           : search.map((character) => (
               <Character
-                name={character.name}
-                image={character.image}
-                location={character.location}
+                onName={addFavThunk}
+                char={{
+                  name: character.name,
+                  image: character.image,
+                  location: character.location,
+                }}
               />
             ))}
       </div>

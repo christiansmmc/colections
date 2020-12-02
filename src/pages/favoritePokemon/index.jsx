@@ -1,23 +1,17 @@
 import Character from "../../components/showChar";
 
-import { useState } from "react";
-
 import { motion } from "framer-motion";
 
 import { Button } from "../../style/button";
 
-const FavoritePokemon = () => {
-  const [local, setLocal] = useState(
-    JSON.parse(localStorage.getItem("favoritesP")) || []
-  );
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RemovePokeThunk } from "../../store/favP/thunks";
 
-  const remove = (id) => {
-    const index = local.findIndex((e) => e.id === id);
-    local.splice(index, 1);
-    localStorage.setItem("favoritesP", JSON.stringify(local));
-    setLocal(JSON.parse(localStorage.getItem("favoritesP")));
-  };
-  console.log(local);
+const FavoritePokemon = () => {
+  const dispatch = useDispatch();
+  const poke = useSelector((state) => state.pokemon);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -26,19 +20,23 @@ const FavoritePokemon = () => {
       transition={{ duration: 0.25 }}
     >
       <div className="list">
-        {local.length === 0 ? (
+        {poke.length === 0 ? (
           <h1 style={{ color: "red", fontWeight: "bold" }}>
             Add at least one character to see your favorites
           </h1>
         ) : (
-          local.map((favorite) => (
-            <div className="fav-card">
+          poke.map((favorite, index) => (
+            <div key={index} className="fav-card">
               <Character
-                id={favorite.id}
-                name={favorite.name}
-                image={favorite.image}
+                char={{
+                  id: favorite.id,
+                  name: favorite.name,
+                  image: favorite.image,
+                }}
               />
-              <Button onClick={() => remove(favorite.id)}>Remove</Button>
+              <Button onClick={() => dispatch(RemovePokeThunk(favorite.name))}>
+                Remove
+              </Button>
             </div>
           ))
         )}

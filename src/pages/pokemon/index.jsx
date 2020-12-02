@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { Button } from "antd";
 import Search from "../../components/searchBar";
 
+import { addPokeThunk } from "../../store/favP/thunks";
+
 const Pokemon = () => {
   const [api, setApi] = useState();
   const [pokemon, setPokemon] = useState([]);
@@ -69,14 +71,18 @@ const Pokemon = () => {
       </div>
       <div className="list">
         {search.length === 0
-          ? pokemon.map((pokemon) => {
+          ? pokemon.map((pokemon, index) => {
               const brokenUrl = pokemon.url.split("/");
               const id = brokenUrl[brokenUrl.length - 2];
               return (
                 <Character
-                  id={id}
-                  name={pokemon.name}
-                  image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+                  key={index}
+                  onName={addPokeThunk}
+                  char={{
+                    id: id,
+                    name: pokemon.name,
+                    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+                  }}
                 />
               );
             })
@@ -85,9 +91,12 @@ const Pokemon = () => {
               const id = brokenUrl[brokenUrl.length - 2];
               return (
                 <Character
-                  id={id}
-                  name={search.name}
-                  image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+                  onName={addPokeThunk}
+                  char={{
+                    id: id,
+                    name: search.name,
+                    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+                  }}
                 />
               );
             })}

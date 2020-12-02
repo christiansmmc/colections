@@ -2,39 +2,46 @@ import { Container } from "../../style/style.js";
 
 import { motion } from "framer-motion";
 
-const Character = ({ name, image, id, location }) => {
-  const addFavorites = (name, image) => {
-    let getFavPokemon = JSON.parse(localStorage.getItem("favoritesP")) || [];
-    let getFavRick = JSON.parse(localStorage.getItem("favoritesR")) || [];
+import { useDispatch } from "react-redux";
+import { addFavThunk } from "../../store/favR/thunks";
+import { addPokeThunk } from "../../store/favP/thunks";
 
-    if (getFavRick.some((e) => e.name === name)) {
-      return;
-    }
+const Character = ({ char, onName }) => {
+  const dispatch = useDispatch();
 
-    if (location) {
-      getFavRick.push({ name, image, id });
-      localStorage.setItem("favoritesR", JSON.stringify(getFavRick));
-      return;
-    }
+  // const addFavorites = (char) => {
+  //   console.log(char);
+  //   let getFavPokemon = JSON.parse(localStorage.getItem("favoritesP")) || [];
+  //   let getFavRick = JSON.parse(localStorage.getItem("favoritesR")) || [];
 
-    if (getFavPokemon.some((e) => e.id === id)) {
-      return;
-    } else {
-      getFavPokemon.push({ name, image, id });
-      localStorage.setItem("favoritesP", JSON.stringify(getFavPokemon));
-    }
-  };
+  //   if (getFavRick.some((e) => e.name === char.name)) {
+  //     return;
+  //   }
+
+  //   if (char.location) {
+  //     getFavRick.push(char);
+  //     localStorage.setItem("favoritesR", JSON.stringify(getFavRick));
+  //     return;
+  //   }
+
+  //   if (getFavPokemon.some((e) => e.id === char.id)) {
+  //     return;
+  //   } else {
+  //     getFavPokemon.push(char);
+  //     localStorage.setItem("favoritesP", JSON.stringify(getFavPokemon));
+  //   }
+  // };
 
   return (
-    <Container>
+    <Container key="1">
       <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => addFavorites(name, image)}
+        onClick={() => dispatch(onName(char))}
         className="cards"
       >
-        <img src={image} alt={name} />
-        <div className="pokemonName">{name}</div>
+        <img src={char.image} alt={char.name} />
+        <div className="pokemonName">{char.name}</div>
       </motion.div>
     </Container>
   );

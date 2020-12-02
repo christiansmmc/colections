@@ -1,30 +1,16 @@
 import Character from "../../components/showChar";
 
-import { useState } from "react";
-
 import { motion } from "framer-motion";
 
 import { Button } from "../../style/button";
 
+import { useDispatch } from "react-redux";
+import { removeFavThunk } from "../../store/favR/thunks";
+import { useSelector } from "react-redux";
+
 const FavoriteRick = () => {
-  // let getLocal = JSON.parse(localStorage.getItem("favoritesR")) || [];
-
-  // const remove = (id) => {
-  //   const index = getLocal.findIndex((e) => e.id === id);
-  //   getLocal.splice(index, 1);
-  //   localStorage.setItem("favoritesR", JSON.stringify(getLocal));
-  // };
-
-  const [local, setLocal] = useState(
-    JSON.parse(localStorage.getItem("favoritesR")) || []
-  );
-
-  const remove = (name) => {
-    const index = local.findIndex((e) => e.name === name);
-    local.splice(index, 1);
-    localStorage.setItem("favoritesR", JSON.stringify(local));
-    setLocal(JSON.parse(localStorage.getItem("favoritesR")));
-  };
+  const dispatch = useDispatch();
+  const rick = useSelector((state) => state.rick);
 
   return (
     <motion.div
@@ -34,19 +20,23 @@ const FavoriteRick = () => {
       transition={{ duration: 0.25 }}
     >
       <div className="list">
-        {local.length === 0 ? (
+        {rick.length === 0 ? (
           <h1 style={{ color: "red", fontWeight: "bold" }}>
             Add at least one character to see your favorites
           </h1>
         ) : (
-          local.map((favorite) => (
-            <div className="fav-card">
+          rick.map((favorite, index) => (
+            <div key={index} className="fav-card">
               <Character
-                id={favorite.id}
-                name={favorite.name}
-                image={favorite.image}
+                char={{
+                  name: favorite.name,
+                  image: favorite.image,
+                  id: favorite.location,
+                }}
               />
-              <Button onClick={() => remove(favorite.name)}>Remove</Button>
+              <Button onClick={() => dispatch(removeFavThunk(favorite.name))}>
+                Remove
+              </Button>
             </div>
           ))
         )}
