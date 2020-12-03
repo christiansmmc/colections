@@ -8,49 +8,42 @@ import { Button } from "antd";
 import Search from "../../components/searchBar";
 
 import { addFavThunk } from "../../store/favR/thunks";
+import { colectionRickThunk } from "../../store/colectionRick/thunks";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Rick = () => {
-  const [api, setApi] = useState();
-  const [character, setCharacter] = useState([]);
+  const [nextPage, setNextPage] = useState();
   const [url, setUrl] = useState(
     "https://rickandmortyapi.com/api/character?page=1"
   );
-  const [search, setSearch] = useState([]);
+  const dispatch = useDispatch();
+  const rick = useSelector((state) => state.colectionRick);
 
   const next = () => {
-    if (api.next === null) {
+    if (nextPage.next === null) {
       return;
     }
-    setUrl(api.next);
+    setUrl(nextPage.next);
   };
 
   const prev = () => {
-    if (api.prev === null) {
+    if (nextPage.previous === null) {
       return;
     }
-    setUrl(api.prev);
+    setUrl(nextPage.previous);
   };
 
   useEffect(() => {
-    axios.get(url).then((res) => {
-      setCharacter([...res.data.results]);
-      setApi(res.data.info);
-    });
+    dispatch(colectionRickThunk(url, setNextPage));
   }, [url]);
 
   const searchRick = (e) => {
     let apiName = e.toLowerCase();
-
-    axios
-      .get(`https://rickandmortyapi.com/api/character/?name=${apiName}`)
-      .then((res) => {
-        setSearch([...res.data.results]);
-      }, [])
-      .catch(setSearch([]));
+    setUrl(`https://rickandmortyapi.com/api/character/?name=${apiName}`);
   };
 
   const zerar = () => {
-    setSearch([]);
     setUrl("https://rickandmortyapi.com/api/character?page=1");
   };
 
@@ -73,28 +66,17 @@ const Rick = () => {
         </Button>
       </div>
       <div className="list">
-        {search.length === 0
-          ? character.map((character, index) => (
-              <Character
-                key={index}
-                onName={addFavThunk}
-                char={{
-                  name: character.name,
-                  image: character.image,
-                  location: character.location,
-                }}
-              />
-            ))
-          : search.map((character) => (
-              <Character
-                onName={addFavThunk}
-                char={{
-                  name: character.name,
-                  image: character.image,
-                  location: character.location,
-                }}
-              />
-            ))}
+        {rick.map((character, index) => (
+          <Character
+            key={index}
+            onName={addFavThunk}
+            char={{
+              name: character.name,
+              image: character.image,
+              location: character.location,
+            }}
+          />
+        ))}
       </div>
     </motion.div>
   );

@@ -8,35 +8,38 @@ import { Button } from "antd";
 import Search from "../../components/searchBar";
 
 import { addPokeThunk } from "../../store/favP/thunks";
+import { colectionThunk } from "../../store/colection/thunks";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Pokemon = () => {
-  const [api, setApi] = useState();
-  const [pokemon, setPokemon] = useState([]);
+  const dispatch = useDispatch();
+  const pokemon = useSelector((state) => state.colection);
+
+  const [nextPage, setNextPage] = useState();
   const [search, setSearch] = useState([]);
 
   const [url, setUrl] = useState(
     "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
   );
+
+  useEffect(() => {
+    dispatch(colectionThunk(url, setNextPage));
+  }, [url]);
+
   const prev = () => {
-    if (api.previous === null) {
+    if (nextPage.previous === null) {
       return;
     }
-    setUrl(api.previous);
+    setUrl(nextPage.previous);
   };
 
   const next = () => {
-    if (api.next === null) {
+    if (nextPage.next === null) {
       return;
     }
-    setUrl(api.next);
+    setUrl(nextPage.next);
   };
-
-  useEffect(() => {
-    axios.get(url).then((res) => {
-      setPokemon([...res.data.results]);
-      setApi(res.data);
-    });
-  }, [url]);
 
   const searchPokemon = (e) => {
     let pokemonName = e.toLowerCase();
@@ -86,11 +89,12 @@ const Pokemon = () => {
                 />
               );
             })
-          : search.map((search) => {
+          : search.map((search, index) => {
               const brokenUrl = search.url.split("/");
               const id = brokenUrl[brokenUrl.length - 2];
               return (
                 <Character
+                  key={index}
                   onName={addPokeThunk}
                   char={{
                     id: id,
