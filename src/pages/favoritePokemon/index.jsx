@@ -28,6 +28,8 @@ const FavoritePokemon = () => {
           poke.map((favorite, index) => (
             <div key={index} className="fav-card">
               <Character
+                clickable={false}
+                className="pokeImage"
                 char={{
                   id: favorite.id,
                   name: favorite.name,

@@ -79,6 +79,7 @@ const Pokemon = () => {
               const id = brokenUrl[brokenUrl.length - 2];
               return (
                 <Character
+                  className="pokeImage"
                   key={index}
                   onName={addPokeThunk}
                   char={{
@@ -94,6 +95,7 @@ const Pokemon = () => {
               const id = brokenUrl[brokenUrl.length - 2];
               return (
                 <Character
+                  className="pokeImage"
                   key={index}
                   onName={addPokeThunk}
                   char={{

@@ -28,6 +28,7 @@ const FavoriteRick = () => {
           rick.map((favorite, index) => (
             <div key={index} className="fav-card">
               <Character
+                clickable={false}
                 char={{
                   name: favorite.name,
                   image: favorite.image,
